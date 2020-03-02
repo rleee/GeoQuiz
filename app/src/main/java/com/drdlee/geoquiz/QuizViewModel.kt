@@ -9,6 +9,7 @@ class QuizViewModel: ViewModel() {
     var currentIndex = 0
     var score = 0
     var answeredCount = 0
+    var cheatCount = 0
     var isCheater = false
 
     private val questionBank = listOf(
@@ -34,6 +35,10 @@ class QuizViewModel: ViewModel() {
 
     fun addScore() {
         score += 1
+    }
+
+    fun addCheatCount() {
+        cheatCount += 1
     }
 
     fun moveToNext() {
