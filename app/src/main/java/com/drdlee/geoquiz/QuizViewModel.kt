@@ -7,6 +7,8 @@ private const val TAG = "QuizViewModel"
 class QuizViewModel: ViewModel() {
 
     var currentIndex = 0
+    var score = 0
+    var answeredCount = 0
     var isCheater = false
 
     private val questionBank = listOf(
@@ -27,6 +29,13 @@ class QuizViewModel: ViewModel() {
     val isCurrentQuestionAnswered: Boolean
         get() = questionBank[currentIndex].answered
 
+    val questionCount: Int
+        get() = questionBank.size
+
+    fun addScore() {
+        score += 1
+    }
+
     fun moveToNext() {
         currentIndex = (currentIndex + 1) % questionBank.size
     }
@@ -40,6 +49,7 @@ class QuizViewModel: ViewModel() {
 
     fun updateIsAnswered() {
         questionBank[currentIndex].answered = true
+        answeredCount += 1
     }
 
 }

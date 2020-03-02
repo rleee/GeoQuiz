@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
 
+    <string name="score_text">Score: %1$d of %2$d</string>
+
     <string name="question_holland">Holland is the capital of The Netherlands.</string>
     <string name="question_oceans">The pacific Ocean is larger than the Atlantic Ocean.</string>
     <string name="question_mideast">The Suez Canal connects the Red Sea and the Indoan Ocean.</string>
@@ -20,4 +22,6 @@
     <string name="warning_text">Are you sure want to do this?</string>
     <string name="show_answer_button">Show Answer</string>
     <string name="judgement_toast">Cheating is wrong.</string>
+
+    <string name="finish_text">You\'ve answered all the questions</string>
 </resources>

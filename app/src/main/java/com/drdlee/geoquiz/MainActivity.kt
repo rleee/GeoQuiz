@@ -9,15 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 private const val KEY_INDEX = "index"
+private const val KEY_SCORE = "score"
+private const val KEY_ANSWERED = "answered_count"
 private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var prevButton: Button
     private lateinit var cheatButton: Button
+    private lateinit var scoreTextView: TextView
 
     private val quizViewModel: QuizViewModel by lazy {
         ViewModelProvider(this).get(QuizViewModel::class.java)
@@ -40,7 +40,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
-        quizViewModel.currentIndex = currentIndex
+        val score = savedInstanceState?.getInt(KEY_SCORE, 0) ?: 0
+        val answeredCount = savedInstanceState?.getInt(KEY_ANSWERED, 0) ?: 0
+        quizViewModel.apply {
+            this.currentIndex = currentIndex
+            this.score = score
+            this.answeredCount = answeredCount
+        }
 
         questionTextView = findViewById(R.id.question_text_view)
         trueButton = findViewById(R.id.true_button)
@@ -48,17 +54,20 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
         cheatButton = findViewById(R.id.cheat_button)
+        scoreTextView = findViewById(R.id.score_text_view)
 
         trueButton.setOnClickListener {
-            quizViewModel.updateIsAnswered()
-            disableAnswerButton()
             checkAnswer(true)
+            quizViewModel.updateIsAnswered()
+            checkIsAllAnswered()
+            disableAnswerButton()
         }
 
         falseButton.setOnClickListener {
-            quizViewModel.updateIsAnswered()
-            disableAnswerButton()
             checkAnswer(false)
+            quizViewModel.updateIsAnswered()
+            checkIsAllAnswered()
+            disableAnswerButton()
         }
 
         nextButton.setOnClickListener {
@@ -90,6 +99,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateQuestion()
+        val scoreString = getString(R.string.score_text, quizViewModel.score, quizViewModel.questionCount)
+        scoreTextView.text = scoreString
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -123,6 +134,8 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onSaveInstanceState")
 
         outState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+        outState.putInt(KEY_SCORE, quizViewModel.score)
+        outState.putInt(KEY_ANSWERED, quizViewModel.answeredCount)
     }
 
     override fun onStop() {
@@ -144,13 +157,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkAnswer(userAnswer: Boolean) {
         val correctAnswer = quizViewModel.currentQuestionAnswer
+
+        // Show Toast
         val messageResId = when {
             quizViewModel.isCheater -> R.string.judgement_toast
             userAnswer == correctAnswer -> R.string.correct_toast
             else -> R.string.incorrect_toast
         }
-
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+
+        // Add Score
+        if (correctAnswer == userAnswer) {
+            quizViewModel.addScore()
+        }
+
+        val scoreString = getString(R.string.score_text, quizViewModel.score, quizViewModel.questionCount)
+        scoreTextView.text = scoreString
+
         quizViewModel.isCheater = false
     }
 
@@ -163,6 +186,12 @@ class MainActivity : AppCompatActivity() {
             trueButton.isEnabled = true
             falseButton.isEnabled = true
             cheatButton.isEnabled = true
+        }
+    }
+
+    private fun checkIsAllAnswered() {
+        if (quizViewModel.answeredCount == quizViewModel.questionCount) {
+            Toast.makeText(this, R.string.finish_text, Toast.LENGTH_LONG).show()
         }
     }
 }
