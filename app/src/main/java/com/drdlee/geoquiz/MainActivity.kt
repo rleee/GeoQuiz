@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 private const val KEY_INDEX = "index"
@@ -50,11 +51,13 @@ class MainActivity : AppCompatActivity() {
 
         trueButton.setOnClickListener {
             quizViewModel.updateIsAnswered()
+            disableAnswerButton()
             checkAnswer(true)
         }
 
         falseButton.setOnClickListener {
             quizViewModel.updateIsAnswered()
+            disableAnswerButton()
             checkAnswer(false)
         }
 
@@ -135,6 +138,8 @@ class MainActivity : AppCompatActivity() {
     private fun updateQuestion() {
         val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
+
+        disableAnswerButton()
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
@@ -147,5 +152,17 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
         quizViewModel.isCheater = false
+    }
+
+    private fun disableAnswerButton() {
+        if (quizViewModel.isCurrentQuestionAnswered) {
+            trueButton.isEnabled = false
+            falseButton.isEnabled = false
+            cheatButton.isEnabled = false
+        } else {
+            trueButton.isEnabled = true
+            falseButton.isEnabled = true
+            cheatButton.isEnabled = true
+        }
     }
 }
