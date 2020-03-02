@@ -10,12 +10,12 @@ class QuizViewModel: ViewModel() {
     var isCheater = false
 
     private val questionBank = listOf(
-        Question(R.string.question_holland, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true)
+        Question(R.string.question_holland, true, answered = false),
+        Question(R.string.question_oceans, true, answered = false),
+        Question(R.string.question_mideast, false, answered = false),
+        Question(R.string.question_africa, false, answered = false),
+        Question(R.string.question_americas, true, answered = false),
+        Question(R.string.question_asia, true, answered = false)
     )
 
     val currentQuestionAnswer: Boolean
@@ -33,6 +33,10 @@ class QuizViewModel: ViewModel() {
             0 -> questionBank.lastIndex
             else -> currentIndex - 1
         }
+    }
+
+    fun updateIsAnswered() {
+        questionBank[currentIndex].answered = true
     }
 
 }

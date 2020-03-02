@@ -49,10 +49,12 @@ class MainActivity : AppCompatActivity() {
         cheatButton = findViewById(R.id.cheat_button)
 
         trueButton.setOnClickListener {
+            quizViewModel.updateIsAnswered()
             checkAnswer(true)
         }
 
         falseButton.setOnClickListener {
+            quizViewModel.updateIsAnswered()
             checkAnswer(false)
         }
 
