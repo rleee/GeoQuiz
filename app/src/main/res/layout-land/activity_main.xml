@@ -31,12 +31,27 @@
 
     </LinearLayout>
 
-    <ImageButton
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom|end"
+        android:padding="6dp"
+        android:gravity="center">
+
+    <Button
+        android:id="@+id/cheat_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cheat_button"/>
+
+    <Button
         android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/arrow_right"
-        android:contentDescription="@string/next_button"
-        android:layout_gravity="bottom|end"/>
+        android:text="@string/next_button"
+        android:drawableEnd="@drawable/arrow_right"/>
+
+    </LinearLayout>
 
 </FrameLayout>
