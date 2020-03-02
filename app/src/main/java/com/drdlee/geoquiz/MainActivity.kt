@@ -41,6 +41,42 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate: called")
         setContentView(R.layout.activity_main)
 
+        initSavedInstance(savedInstanceState)
+        initViews()
+        initListeners()
+
+        updateQuestion()
+        updateScore()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            quizViewModel.isCheater = data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+        }
+
+        if (quizViewModel.isCheater) {
+            quizViewModel.addCheatCount()
+            updateScore()
+            disableAnswerButton()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.i(TAG, "onSaveInstanceState")
+
+        outState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+        outState.putInt(KEY_SCORE, quizViewModel.score)
+        outState.putInt(KEY_ANSWERED, quizViewModel.answeredCount)
+        outState.putInt(KEY_CHEATED, quizViewModel.cheatCount)
+    }
+
+    private fun initSavedInstance(savedInstanceState: Bundle?) {
         val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
         val score = savedInstanceState?.getInt(KEY_SCORE, 0) ?: 0
         val answeredCount = savedInstanceState?.getInt(KEY_ANSWERED, 0) ?: 0
@@ -51,7 +87,9 @@ class MainActivity : AppCompatActivity() {
             this.answeredCount = answeredCount
             this.cheatCount = cheatedCount
         }
+    }
 
+    private fun initViews() {
         questionTextView = findViewById(R.id.question_text_view)
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -60,7 +98,9 @@ class MainActivity : AppCompatActivity() {
         cheatButton = findViewById(R.id.cheat_button)
         scoreTextView = findViewById(R.id.score_text_view)
         cheatedTexView = findViewById(R.id.cheat_text_view)
+    }
 
+    private fun initListeners() {
         trueButton.setOnClickListener {
             checkAnswer(true)
             quizViewModel.updateIsAnswered()
@@ -107,36 +147,6 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(intent, REQUEST_CODE_CHEAT)
             }
         }
-
-        updateQuestion()
-        updateScore()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) {
-            return
-        }
-
-        if (requestCode == REQUEST_CODE_CHEAT) {
-            quizViewModel.isCheater = data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
-        }
-
-        if (quizViewModel.isCheater) {
-            quizViewModel.addCheatCount()
-            updateScore()
-            disableAnswerButton()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.i(TAG, "onSaveInstanceState")
-
-        outState.putInt(KEY_INDEX, quizViewModel.currentIndex)
-        outState.putInt(KEY_SCORE, quizViewModel.score)
-        outState.putInt(KEY_ANSWERED, quizViewModel.answeredCount)
-        outState.putInt(KEY_CHEATED, quizViewModel.cheatCount)
     }
 
     private fun updateQuestion() {
