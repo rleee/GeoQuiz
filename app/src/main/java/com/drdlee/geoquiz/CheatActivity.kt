@@ -30,6 +30,7 @@ class CheatActivity : AppCompatActivity() {
 
         val answerState = savedInstanceState?.getBoolean(KEY_ANSWER_STATE, false) ?: false
         isAnswerShown = answerState
+        if (isAnswerShown) setAnswerShownResult()
 
         answerTextView = findViewById(R.id.answer_text_view)
         showAnswerButton = findViewById(R.id.show_answer_button)
@@ -47,7 +48,7 @@ class CheatActivity : AppCompatActivity() {
 
     private fun setAnswerShownResult() {
         val data = Intent().apply {
-            putExtra(EXTRA_ANSWER_SHOWN, true)
+            putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown)
         }
         setResult(Activity.RESULT_OK, data)
     }
