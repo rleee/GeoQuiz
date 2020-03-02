@@ -86,8 +86,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         cheatButton.setOnClickListener {
-            val answerIsTrue = quizViewModel.currentQuestionAnswer
-            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+            val theAnswer = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, theAnswer)
 
             // Check which version the device and run the function accordingly
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
