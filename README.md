@@ -3,6 +3,14 @@
 
 ###### Chapter 1 - 7
 
+#### Index:
+- [Activity Lifecycle](#activity-lifecycle)
+- [ViewModel](#viewmodel)
+  - [Handling process death](#handling-process-death)
+- [Intent](#intent)
+  - [Pass intent without asking result](#to-pass-data-through-intent-without-waiting-value-to-pass-back)
+  - [Pass intent and ask for result](#to-pass-data-through-intent-and-wait-a-value-to-pass-back)
+
 ---
 
 ## Activity Lifecycle
@@ -45,7 +53,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 <br/>
 
-**Handling process death**
+#### Handling process death
 > process death is when OS wipe the Activity and ViewModel from memory when app is not in active use, to allocate memory for other running & visible app
 
 > to simulate process death, on android phone go to Settings -> Developer options -> Don't keep activities
@@ -78,7 +86,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 Intent are actually pass through Activity Manager in OS the Activity Manager will start the target intent, how will Activity Manager know which intent? because we declared it in Android Manifest
 
-**to pass data through intent *without waiting value* to pass back**
+#### to pass data through intent *without waiting value* to pass back
 ```kotlin
 cheatButton.setOnClickListener {
     val intent = Intent(this, CheatActivity::class.java)
@@ -98,7 +106,7 @@ class CheatActivity : AppCompatActivity() {
 }
 ```
 
-**to pass data through intent *and wait a value* to pass back**
+#### to pass data through intent *and wait a value* to pass back
 ```kotlin
 cheatButton.setOnClickListener {
     val intent = Intent(this, CheatActivity::class.java)
