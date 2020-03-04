@@ -36,7 +36,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
     ...
     setContentView(R.layout.activity_main)
     
-    val quizViewModel = ViewModelProvider(this).get(QuizViewModel::class.java)
+    private val quizViewModel: QuizViewModel by lazy {
+        ViewModelProvider(this).get(QuizViewModel::class.java)
+    }
     ...
 }
 ```
